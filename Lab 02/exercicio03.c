@@ -1,14 +1,17 @@
-// Autores: Ingrid Reupke Sbeguen Moran RA:2349388,Guilherme Almeida Lopes RA:2458802,Caio rangel ferreira rodrigues RA:2252716
+// Autores: Ingrid Reupke Sbeguen Moran RA:2349388, Guilherme Almeida Lopes RA:2458802,Caio rangel ferreira rodrigues RA:2252716
 //  Data de criação: 01.09.2023
 //  Data de atualização: 01.09.2023
 /*programa que receba um vetor e distribua o processamento em partes iguais para N filhos,
 cada um encarregado de procurar um item específico.
 O programa deve exibir o PID dos filhos que encontrarem o valor procurado.*/
+
 #include <stdio.h>     // printf
 #include <stdlib.h>    // exit
 #include <sys/wait.h>  //wait
 #include <sys/types.h> // pid_t  tipo
 #include <unistd.h>    // fork()
+#include<string.h>     // strtork,atoi,strcspn
+
 int busca(int* vetorinicial,int *vetorfinal, int elemento)
 {
     // elemento-> elemento que buscaremos no vetor
@@ -64,17 +67,43 @@ void _questao03(int inicio,int fim, int qtd_filhos, int elemento, int *vetor)
     wait(NULL); // espera o fim dos prcessos filhos para executar o exit
     exit(0);    // sai do processo
 }
+
 void questao3(int *vetor, int qtd_filhos, int elemento, int tamanho)
 {
     // função que serve uma uma casaca para processo real
     _questao03(0, tamanho - 1, qtd_filhos, elemento, vetor);
 }
+
 int main(int argc, char const *argv[])
 {
-    int vetor[] = {10, 500, 30, 500, 30, 500}; // vetor que vamos analisar
-    int quantidades_filhos = 3;                // quantidade de processos filhos
-    int elemento = 500;                        // elemento que vamos buscar
-    int tamanho_vetor = 6;                     // tamanho do vetor
-    questao3(vetor, quantidades_filhos, elemento, tamanho_vetor); // chamada da função
+    int tamanhodovetor;                // quantidade de elementos do vetor
+    printf("Digite o tamanho do vetor: ");
+    scanf("%d",&tamanhodovetor); // ex:20
+    
+    int quantidades_filhos;                // quantidade de processos filho
+    printf("Digite Quantas partes deseja dividir o vetor: ");
+    scanf("%d",&quantidades_filhos); // ex:4
+
+    char vetor[tamanhodovetor]; // vetor de elementos 
+    printf("Digite o vetor: ");
+    scanf("%s",vetor); // ex: 100,200,56,300,899
+    vetor[tamanhodovetor-1]=',';// adiciona um virgula no final do vetor
+
+    int vetortcast[tamanhodovetor]; // vetor de inteiros
+    char* temp=strtok(vetor,",");
+    int tempint=atoi(temp);
+    int i=0;
+    while (temp!=NULL){
+         vetortcast[i]=tempint;
+         temp=strtok(NULL,",");
+         if (temp!=NULL) tempint=atoi(temp);
+         i++;
+    }
+    int elemento;    // elemento
+    printf("Digite o elemento da busca: ");
+    scanf("%d",&elemento);
+    
+    questao3(vetortcast, quantidades_filhos, elemento, tamanhodovetor); // chamada da função
+
     return 0;
 }

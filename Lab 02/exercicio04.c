@@ -37,7 +37,7 @@ int main(){
         while (arg!=NULL)
         {
             arg=strtok(NULL," ");// pega o próximo token
-            if(arg!=NULL &&strcmp(arg,"&")!=0){ //verifica se arg é diferente & e verifca se arg diferente de NULL 
+            if(arg!=NULL && strcmp(arg,"&")!=0){ //verifica se arg é diferente & e verifca se arg diferente de NULL 
                 argumentolist[i++]=arg;// adiciona argumento lista de argumentos
             }else if(arg!=NULL && strcmp(arg,"&")==0){
                 backgroud=1;// habilita a flag back
