@@ -9,7 +9,7 @@ O programa deve exibir o PID dos filhos que encontrarem o valor procurado.*/
 #include <stdlib.h>    // exit
 #include <sys/wait.h>  //wait
 #include <sys/types.h> // pid_t  tipo
-#include <unistd.h>    // fork()
+#include <unistd.h>    // fork
 #include<string.h>     // strtork,atoi,strcspn
 
 int busca(int* vetorinicial,int *vetorfinal, int elemento)

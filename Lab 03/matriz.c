@@ -61,6 +61,8 @@ void write_matriz_in_file(int** matriz, int linhas, int colunas, const char* nom
         return;
     }
 
+    fprintf(arquivo,"%dx%d\n",linhas,colunas);
+
     for (int i = 0; i < linhas; i++) {
         for (int j = 0; j < colunas; j++) {
             fprintf(arquivo, "%d ", matriz[i][j]);

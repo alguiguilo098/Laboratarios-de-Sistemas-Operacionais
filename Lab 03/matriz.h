@@ -17,4 +17,4 @@ int** read_matrix_from_file(char* filename, int *row, int *col);
 /*  exibe uma matrix row x col */
 void print_matrix(int** matrix, int row, int col);
 /*escreve uma matriz em arquivo*/ 
-void write_matriz_in_arquivo(int** matriz, int linhas, int colunas, const char* nome_arquivo);
+void write_matriz_in_file(int** matriz, int linhas, int colunas, const char* nome_arquivo);
