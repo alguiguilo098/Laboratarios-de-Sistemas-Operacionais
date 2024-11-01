@@ -37,7 +37,7 @@ chuck_linha_matriz*criar_chunck_geometrica(int linha,int **matriz,int*vetor_medi
 }
 void* media_aritimetica(void* ptr){
     chuck_linha_matriz*m=ptr;
-    double sum=0.0;// acumulador 
+    int sum=0.0;// acumulador 
     for(int i = 0; i <m->colunas; i++){
         // soma todos os elementos da linhas da matriz
         sum+=m->matriz[m->linha][i];
@@ -67,13 +67,13 @@ int main(int argc, char const *argv[]){
     printf("Informe o valor maximo do elemento aleatório gerado");
     scanf("%d",&maxrand);
 
-    int media_vetor_aritimetica[quantidades_linhas];
+    int* media_vetor_aritimetica=(int*)calloc(quantidades_colunas,sizeof(int));
 
     int**matriz=create_matrix(quantidades_linhas,quantidades_colunas);// inicializa a estrutura da matriz
 
     generate_elements(matriz,quantidades_linhas,quantidades_colunas,maxrand);// inicializa a matriz com elementos aleatórios.
     
-    write_matriz_in_file(matriz,quantidades_linhas,quantidades_colunas,"data_matriz_100_200.in"); // escreve a matriz aleatória em arquivo
+    write_matriz_in_file(matriz,quantidades_linhas,quantidades_colunas,"entrada.txt"); // escreve a matriz aleatória em um arquivo
 
 
     chuck_linha_matriz* argumentos=criar_chunck_media_aritmetica(quantidades_colunas,matriz,media_vetor_aritimetica);//cria os argumetos da thread
@@ -105,10 +105,14 @@ int main(int argc, char const *argv[]){
         argumentos_dois->colunas=i;// atualiza o iterador da thread
         pthread_join(thread[quantidades_linhas+i+1],NULL);//espera a thread terminar
     }
-    int* resultados[2]={media_vetor_aritimetica,media_geometrica};
+    int* resultados[2]={argumentos->media,argumentos_dois->media};
 
-    write_matriz_in_file(resultados,2,quantidades_colunas,"resposta.txt");
+    write_matriz_in_file(resultados,2,quantidades_colunas,"saida.txt");
 
+    free(argumentos);
+    free(argumentos_dois);
+    free(media_vetor_aritimetica);
+    
     pthread_exit(&thread);
 
     return 0;
