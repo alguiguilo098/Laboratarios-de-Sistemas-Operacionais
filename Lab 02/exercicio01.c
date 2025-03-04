@@ -8,6 +8,7 @@ onde cada nível terá o dobro de processos do nível anterior.*/
 #include<unistd.h>// fork
 #include<stdio.h>// printf
 #include<stdlib.h> //system
+
 void _questao01(int iterador, int hierarquia){
     // iterator-> variavel que indica quando a chamda recursiva vai parar
     //hierquia-> determina a altura da arvore de processos
