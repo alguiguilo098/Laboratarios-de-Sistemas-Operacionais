@@ -5,7 +5,6 @@
 /*O programa que estamos criando irá gerar uma hierarquia de processos com N níveis, 
 onde cada nível terá o dobro de processos do nível anterior.*/   
 #include <sys/types.h>//pid_t
-
 #include<unistd.h>// fork
 #include<stdio.h>// printf
 #include<stdlib.h> //system
