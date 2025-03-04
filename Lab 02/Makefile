@@ -1,24 +1,11 @@
-questao2:
-	#compilar os arquivo 
-	gcc exercicio02.c -o main
-	#executar compilável
-	./main
 
-questao1:
-	#compilar os arquivo 
-	gcc exercicio01.c -o main
-	#executar compilável
-	./main
+all:
+	@gcc exercicio01.c -o exec01
+	@gcc exercicio02.c -o exec02
+	@gcc exercicio03.c -o exec03
+	@gcc exercicio04.c -o exec04
 
-questao3:
-	#compilar os arquivo 
-	gcc exercicio03.c -o main
-	#executar compilável
-	./main
+clean:
+	@rm -f exec02 exec03 exec04 exec01
 
-questao4:
-	#compilar arquivo
-	gcc exercicio04.c -o main
-	#executar compilável
-	./main
 	

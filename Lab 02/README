@@ -1,26 +1,13 @@
-bibliotecas utilizadas:
-    sys/types.h pid_t
-    unistd.h:fork
-    stdio.h:printf,sprintf
-    stdlib.h: system, exit
-    sys/wait.h wait
+    bibliotecas utilizadas:
+        sys/types.h pid_t
+        unistd.h:fork
+        stdio.h:printf,sprintf
+        stdlib.h: system, exit
+        sys/wait.h wait
 
-Compilar executar o programa utiliza-se Makefile:
-    exemplo: make nome_arquivo.
-    make questao1-> compilar e executar exercicio01.c
+    Para compilar os programas, execute `make all`. Para limpar os arquivos gerados, execute `make clean`.
 
-    O programa que estamos criando irá gerar uma hierarquia de processos com N níveis, 
-    onde cada nível terá o dobro de processos do nível anterior.
-
-    make questao2-> compilar e executar exercicio02.c
-
-    programa que aceite um comando Linux como entrada e o execute como um processo filho do programa. 
-    O processo pai deve aguardar a conclusão da execução do comando antes de terminar
-
-    make questao3-> compilar e executar exercicio03.c
-
-    programa que receba um vetor e distribua o processamento em partes iguais para N filhos, 
-    cada um encarregado de procurar um item específico.
-    O programa deve exibir o PID dos filhos que encontrarem o valor procurado.
-     
-    make questao4-> compilar e executar exercicio04.c  
+    - **exercicio01.c**: Programa que gera uma hierarquia de processos com N níveis. Exemplo: `./exec01 3`
+    - **exercicio02.c**: Programa que aceita um comando Linux como entrada e o executa como um processo filho. Exemplo: `./exec02`
+    - **exercicio03.c**: Programa que distribui o processamento de um vetor em partes iguais para N filhos, cada um procurando um item específico. ./exec03
+    - **exercicio04.c**: Código responsável por criar uma shell para que o usuário consiga executar comandos. Para um comando que não é executado em segundo plano, foi utilizado o `wait()` para esperar o retorno dele. Para um comando que é executado em segundo plano, o usuário pode executar outros comandos sem nenhum problema. ./exec04

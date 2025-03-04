@@ -10,7 +10,7 @@ O processo pai deve aguardar a conclusão da execução do comando antes de term
 #include<unistd.h> // fork, execvp
 #include <stdio.h> // printf
 #include<string.h> // strtork
-void questao2(const char *comando, char*const* argv,int*status){
+void exec_comand(const char *comando, char*const* argv,int*status){
     /*função que cria um processo filhos, faz o pai esperar
     o processo filho terminar para executar
     o  suas instruções*/
@@ -18,7 +18,7 @@ void questao2(const char *comando, char*const* argv,int*status){
     // argv->recebe o comando novamente, e seu parâmetros a serem executado e  NULL, como ultimo elemento
     // status->um ponteiro que armazena se a operação foi bem sucedida, vai retorna um valor positivo, se retorna negativo
     //a operação não foi bem sucedida
-    printf("Criar Processo Filho\n");
+    
     pid_t child=fork(); // cria o processo filho, espera a sua morte para continuar o processo pai
     if (child<0){// retorna uma execessão quando o processo não cosegue ser criado
       perror("Impossível criar processo");
@@ -28,19 +28,18 @@ void questao2(const char *comando, char*const* argv,int*status){
     }else{
         //comando que o processo pai vai executar
         printf("Aguardando...processo filho\n");
-        wait(status);// Aguarda o fim do processo filho
+        wait(status);// wait process child
         printf("Executando processo pai\n");
     }
-    exit(0);// finaliza o processo
+    exit(0);// finishe the process
 }
 
-int main(int argc, char const *argv[])
-{
+int main(int argc, char const *argv[]){
   char comando[200];
   char* argumentos[200];
   fgets(comando,200,stdin);
   comando[strcspn(comando, "\n")] = '\0';
-  char* args=strtok(comando," ");// recebe o comando ls, o parâmetros -l, NULL
+  char* args=strtok(comando," ");// receive command
   int j=0;
   argumentos[j]=args;
   j++;
@@ -51,6 +50,8 @@ int main(int argc, char const *argv[])
     j++;
   }
   int status;
-  questao2(argumentos[0],argumentos,&status);// chamada da função que implementa a questão 2
-  return 0;// retorno para para oprograma
+  exec_comand(argumentos[0],argumentos,&status);// chamada da função que implementa 
+  printf("Status: %d\n",status);
+
+  return 0;// return program
 }

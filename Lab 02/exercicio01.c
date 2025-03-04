@@ -1,15 +1,16 @@
-//Autores: Ingrid Reupke Sbeguen Moran RA:2349388,Guilherme Almeida Lopes RA:2458802,Caio rangel ferreira rodrigues RA:2252716
+//Autores: Guilherme Almeida Lopes RA:2458802
 // Data de criação: 01.09.2023
 // Data de atualização: 01.09.2023
 
 /*O programa que estamos criando irá gerar uma hierarquia de processos com N níveis, 
-onde cada nível terá o dobro de processos do nível anterior.*/   
+onde cada nível terá o dobro de processos do nível anterior.*/
+   
 #include <sys/types.h>//pid_t
 #include<unistd.h>// fork
 #include<stdio.h>// printf
 #include<stdlib.h> //system
 
-void _questao01(int iterador, int hierarquia){
+void _show_tree_process(int iterador, int hierarquia){
     // iterator-> variavel que indica quando a chamda recursiva vai parar
     //hierquia-> determina a altura da arvore de processos
     if (iterador==hierarquia-1){
@@ -22,7 +23,7 @@ void _questao01(int iterador, int hierarquia){
         //criado
         perror("Impossível criar processo um");
     }if (child_one==0){
-        _questao01(iterador+1,hierarquia);// chamada recursiva do processo 2
+        _show_tree_process(iterador+1,hierarquia);// chamada recursiva do processo 2
         getchar();// pede um caracter no terminal
         exit(0);// encerra o processo filho
     }
@@ -31,20 +32,22 @@ void _questao01(int iterador, int hierarquia){
         // cria processo filho 1
         perror("Impossível criar processo dois");
      }else if (child_two==0){
-        _questao01(iterador+1,hierarquia);// chama recursivamete a função para o processo filho 2
+        _show_tree_process(iterador+1,hierarquia);// chama recursivamete a função para o processo filho 2
         getchar();// espera a entrada de  caracter para continuar
         exit(0);// destroi o processo.
      }   
 }
-void questao1(int hierarquia){
+void tree_process(int hierarquia){
     // chamada da função  _questao, que implementa a função   
-    _questao01(0,hierarquia);
+    _show_tree_process(0,hierarquia);
 }
 int main(int argc, char const *argv[])
 {
+    int hierarquia=atoi(argv[1]);
     char pid[200];
     sprintf(pid,"pstree -c -p %d",getpid());
-    questao1(3);
+    tree_process(hierarquia);
+
     system(pid);
     return 0;
 }
