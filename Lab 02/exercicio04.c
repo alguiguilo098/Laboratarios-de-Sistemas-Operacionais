@@ -25,7 +25,7 @@ int main(){
     int backgroud=0; // variável de controle 
 
     while(1){
-
+        printf("$> "); // imprime o prompt
         fgets(buff,200,stdin);// lê o comando de entrada e grava na string cmd
 
         buff[strcspn(buff, "\n")] = '\0'; // ao ler um \n na string cmd, coloca um 0 no seu lugar
@@ -49,11 +49,19 @@ int main(){
         }
         argumentolist[i]=NULL;// coloca NULL na ultima possição, para indicar o fim dos argumentos
         pid = fork(); // cria  um processo filhos para executar o comando passado
-        if (backgroud==0)
-        {
-            wait(&status);
-        }if(pid == 0){ // caso o pid seja 0, ou seja, de um filho, o comando é executado 
-            execvp(argumentolist[0], argumentolist); // execução do comando
+        if (pid < 0) {
+            perror("Erro ao criar processo filho");
+            exit(1);
+        } else if (pid == 0) { // Código do filho
+            execvp(argumentolist[0], argumentolist); // Executa o comando
+            perror("Erro ao executar comando"); // Se execvp falhar
+            exit(1);
+        } else { // Código do pai
+            if (!backgroud) {
+                wait(&status); // Espera o filho terminar se não for em segundo plano
+            } else {
+                printf("Executando em segundo plano (PID: %d)\n", pid);
+            }
         }
         backgroud=0;// quando termina o processo comando habilita o backgroud para o normal
     }
