@@ -35,23 +35,20 @@ void exec_comand(const char *comando, char*const* argv,int*status){
 }
 
 int main(int argc, char const *argv[]){
-  char comando[200];
-  char* argumentos[200];
-  fgets(comando,200,stdin);
-  comando[strcspn(comando, "\n")] = '\0';
-  char* args=strtok(comando," ");// receive command
-  int j=0;
-  argumentos[j]=args;
-  j++;
-  while (args!=NULL)
-  {
-    args=strtok(NULL," ");
-    argumentos[j]=args;
-    j++;
+  if (argc < 2) {
+    fprintf(stderr, "Usage: %s <command> [args...]\n", argv[0]);
+    exit(EXIT_FAILURE);
   }
+
+  char* argumentos[argc];
+  for (int i = 0; i < argc - 1; i++) {
+    argumentos[i] = (char*)argv[i + 1];
+  }
+  argumentos[argc - 1] = NULL;
+
   int status;
   exec_comand(argumentos[0],argumentos,&status);// chamada da função que implementa 
-  printf("Status: %d\n",status);
+  
 
   return 0;// return program
 }

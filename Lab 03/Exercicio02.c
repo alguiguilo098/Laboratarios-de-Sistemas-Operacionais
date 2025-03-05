@@ -4,7 +4,8 @@
 #include<unistd.h>
 #include<pthread.h>
 #include<math.h>
-//Autores: Ingrid Reupke Sbeguen Moran RA:2349388,Guilherme Almeida Lopes RA:2458802,Caio rangel ferreira rodrigues RA:2252716
+
+//Autores: Guilherme Almeida Lopes RA:2458802
 // Data de criação: 11.09.2023
 // Data de atualização: 11.09.2023
 /*Desenvolva um programa que utilize N threads para buscar um valor específico em um vetor de inteiros. 
