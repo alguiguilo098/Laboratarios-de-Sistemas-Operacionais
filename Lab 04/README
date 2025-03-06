@@ -1,0 +1,10 @@
+Instruções para rodar o lab:
+
+1. Para descompactar process.tar.gz:
+    tar -xzf process.tar.gz
+
+2. Para descompactar ossim-1.2.tar.gz:
+    tar -xzf ossim-1.2.tar.gz
+
+
+

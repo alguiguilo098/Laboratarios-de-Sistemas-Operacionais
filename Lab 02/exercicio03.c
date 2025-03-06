@@ -1,4 +1,4 @@
-// Autores: Ingrid Reupke Sbeguen Moran RA:2349388, Guilherme Almeida Lopes RA:2458802,Caio rangel ferreira rodrigues RA:2252716
+// Autores:Guilherme Almeida Lopes RA:2458802
 //  Data de criação: 01.09.2023
 //  Data de atualização: 01.09.2023
 /*programa que receba um vetor e distribua o processamento em partes iguais para N filhos,
@@ -12,8 +12,7 @@ O programa deve exibir o PID dos filhos que encontrarem o valor procurado.*/
 #include <unistd.h>    // fork
 #include<string.h>     // strtork,atoi,strcspn
 
-int search(int* vetorinicial,int *vetorfinal, int elemento)
-{
+int search(int* vetorinicial,int *vetorfinal, int elemento){
     int count = 0; // contador
     // elemento-> elemento que buscaremos no vetor
     // vetor-> endereço do vetor
@@ -21,7 +20,7 @@ int search(int* vetorinicial,int *vetorfinal, int elemento)
     // fim-> posicao final
     for (int*p=vetorinicial; p!=vetorfinal; p++)
     {
-        if (*p== elemento)
+        if (*p==elemento)
         {
             // retorna 1, quando encotra o elemento no intervalo
             count++;
@@ -37,14 +36,14 @@ void _search_sequencial(int inicio,int fim, int qtd_filhos, int elemento, int *v
     // fim-> posição final do vetor
     // qtd_filhos-> quantidade de processos filhos vamos criar
     // vetor->endereço do vetor
+
     int qtd_elementos_por_processo = (fim + 1) / qtd_filhos; // quantidade de elemento que cada processo irá buscar
     for (int i = 0; i <= qtd_filhos; i++)
     {
         // loop executado para quantidade de processos filhos
         pid_t pid = fork(); // cria um processo filho
         
-        if (pid < 0)
-        {
+        if (pid < 0){
             // imprime mensagem de erro quando não consegue criar processo
             perror("Imposssível criar processo");
         }
@@ -86,10 +85,10 @@ void convert_to_int_array(char* vetor, int* vetortcast, int tamanhodovetor) {
     }
 }
 
-void search_sequencial(int *vetor, int qtd_filhos, int elemento, int tamanho)
+void search_sequencial(int *vetor, int qtd_threads, int elemento, int tamanho)
 {
     // função que serve uma uma casaca para processo real
-    _search_sequencial(0, tamanho - 1, qtd_filhos, elemento, vetor);
+    _search_sequencial(0, tamanho - 1, qtd_threads, elemento, vetor);
 }
 
 int main(int argc, char const *argv[])
@@ -113,6 +112,7 @@ int main(int argc, char const *argv[])
     int vetorcast[tamanhodovetor]; // vetor de elementos convertidos para int
 
     convert_to_int_array(vetor, vetorcast, tamanhodovetor); // chamada da função
+    
     search_sequencial(vetorcast, quantidades_filhos, elemento, tamanhodovetor); // chamada da função
 
     return 0;

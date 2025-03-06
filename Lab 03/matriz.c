@@ -10,7 +10,7 @@
 #include <stdio.h> 
 #include <stdlib.h>     //rand()
 #include "matriz.h"
- 
+
 /** cria uma matriz dinâmica row x col de inteiros */
 int** create_matrix(int row, int col) {
    int **matrix = (int **)malloc(row * sizeof(int *));
