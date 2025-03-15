@@ -8,7 +8,6 @@
 typedef struct args_reader
 {
     int id;
-    int pos;
 } args_reader;
 
 typedef struct args_writer
@@ -17,57 +16,72 @@ typedef struct args_writer
     int value;
 } args_writer;
 
+void printf_args_reader(args_reader* args,int size)
+{
+    for (size_t i = 0; i < size; i++)
+    {
+        printf("id: %d\n", args->id);
+    }
+    printf("\n");
+}
+void printf_args_writer(args_writer* args, int size)
+{
+    for (size_t i = 0; i < size; i++)
+    {
+        printf("id: %d\n", args->id);
+        printf("value: %d\n", args->value);
+    }
+}
 
 void* producer(void* arg) {
     args_writer* i= (args_writer*)arg;
-    put(i->value);
+    put(i->value,i->id);
     printf("Produtor %d Produced: %d\n",i->id,i->value);
     pthread_exit(0);
 }
 
 void* consumer(void* arg) {
     args_reader* args= (args_reader*)arg;
-    int i=take(args->pos);
-    printf("Consumer %d Consumed: %d in position %d\n",args->id,i,args->pos);
+    int i=take(args->id);
+    printf("Consumer %d Consumed: %d\n",args->id,i);
     pthread_exit(0);
 }
 
 int main() {
-    int qtd_consumers;
-    int qtd_producers;
+    int qtd;
     int max_rand;
 
-    printf("Entre com a quantidade de produtores: ");
-    scanf("%d", &qtd_producers);
-    printf("Entre com a quantidade de consumidores: ");
-    scanf("%d", &qtd_consumers);
+    printf("Entre com a quantidade de produtores e consumidores: ");
+    scanf("%d", &qtd);
     printf("Entre com o valor maximo para o random: ");
     scanf("%d", &max_rand);
 
-    initMonitor(qtd_producers);
+    
+    initMonitor(qtd);
 
-    pthread_t consumers[qtd_consumers];
-    pthread_t producers[qtd_producers];
-    args_reader args_consumers[qtd_producers];
-    args_writer args_producers[qtd_consumers];
+    pthread_t consumers[qtd];
+    pthread_t producers[qtd];
 
-    for (size_t i = 0; i < qtd_consumers; i++)
+    args_reader args_consumers[qtd];
+    args_writer args_producers[qtd];
+
+    for (size_t i = 0; i < qtd; i++)
     {
         args_consumers[i].id = i;
-        args_consumers[i].pos = i%qtd_producers;
     }
 
-    for (size_t i = 0; i < qtd_producers; i++)
+    for (size_t i = 0; i < qtd; i++)
     {
         args_producers[i].id = i;
         args_producers[i].value =rand() % max_rand;
     }
 
-    for (size_t i = 0; i < qtd_producers; i++)
+
+    for (size_t i = 0; i < qtd; i++)
     {
         pthread_create(&producers[i], NULL, producer, (void*)&args_producers[i]);
     }    
-    for (size_t i = 0; i < qtd_consumers; i++)
+    for (size_t i = 0; i < qtd; i++)
     {
         pthread_create(&consumers[i], NULL, consumer, (void*)&args_consumers[i]);
     }

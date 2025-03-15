@@ -4,10 +4,10 @@
 #define RESOURCE_MONITOR_H
 
 /* --- monitor operations --- */
-void initMonitor(int size);
+void initMonitor(int buffersize);
 void printfBuffer();
 void destroyMonitor();
-void put(int value);
+void put(int value,int posid);
 int take(int pos);
 
 #endif
