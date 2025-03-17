@@ -11,19 +11,19 @@ typedef struct args_threads{
 }args_threads;
 
 bool issleep;
-bool busy;
-bool is_first;
+
 
 int qtd_cut=0;
 int qtd_cadeiras;
 int qtd_clientes;
 
-sem_t cadeiras;
+sem_t cadeiras_espera;
+sem_t cadeiras_atendido;
 sem_t cadeira_barbeiro;
 pthread_mutex_t mutex;
 pthread_mutex_t mutex_cut;
 void init_sem(){
-    sem_init(&cadeiras,0,0);
+    sem_init(&cadeiras_espera,0,0);
     sem_init(&cadeira_barbeiro,0,0);
     pthread_mutex_init(&mutex,NULL);
     pthread_mutex_init(&mutex_cut,NULL);
@@ -32,27 +32,32 @@ void init_sem(){
 void* barbeiro(void* arg){
     
     while (qtd_cut!=qtd_cadeiras){
+        
         if (issleep){
             printf("O Barbeiro esta dormindo...\n");
-        }else{
-            printf("O Barbeiro atende o cliente...\n");          
         }
-        sem_post(&cadeiras);
+
+        sem_post(&cadeiras_espera);
+        sem_wait(&cadeira_barbeiro);
+        
+        if (!issleep){
+            printf("O Barbeiro chama o cliente para ser atendido ...\nO Barbeiro atende o cliente...\n");
+        }
+
+        sem_post(&cadeiras_atendido);
         sem_wait(&cadeira_barbeiro);
 
         pthread_mutex_lock(&mutex_cut);
         qtd_cut++;
         pthread_mutex_unlock(&mutex_cut);
-        printf("O Barbeiro chama o próximo cliente...\n");
-
-        sem_post(&cadeiras);
     }
-    printf("Terminou !!!");
+    printf("O Barbeiro volta a dormir ...\n");
+
 }
 
 void* client(void* arg){
     args_threads* args=(args_threads*)arg;
-    sem_wait(&cadeiras);
+    sem_wait(&cadeiras_espera);
     printf("O cliente %d chega a barbearia...\n",args->id);
     if (issleep){
         printf("O cliente %d acorda o barbeiro...\n",args->id);
@@ -60,12 +65,19 @@ void* client(void* arg){
         issleep=false;
         pthread_mutex_unlock(&mutex);
         sem_post(&cadeira_barbeiro);
+        sem_wait(&cadeiras_atendido);
     }else{
         printf("O cliente %d espera para ser atendido...\n",args->id);
         sem_post(&cadeira_barbeiro);
-        sem_wait(&cadeiras);
-        printf("O cliente %d sai da barbearia...\n",args->id);
+        sem_wait(&cadeiras_espera);
     }
+    printf("O cabelo do cliente %d é cortado pelo barbeiro...\n",args->id);
+    printf("O cliente %d sai da barbearia...\n",args->id);
+    
+    sem_post(&cadeiras_espera);
+    sem_post(&cadeira_barbeiro);
+
+    pthread_exit(NULL);
 
 }
 
