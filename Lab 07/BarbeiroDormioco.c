@@ -12,6 +12,8 @@ typedef struct args_threads{
 
 bool issleep;
 bool busy;
+bool is_first;
+
 int qtd_cut=0;
 int qtd_cadeiras;
 int qtd_clientes;
@@ -29,73 +31,35 @@ void init_sem(){
 
 void* barbeiro(void* arg){
     while (qtd_cut!=qtd_cadeiras){
+
         int qtd;
         sem_getvalue(&cadeiras,&qtd);
 
         if (qtd==0){
-            printf("O Barbeiro esta dormindo...\n");
             pthread_mutex_lock(&mutex);
             issleep=true;
             pthread_mutex_unlock(&mutex);
+            printf("O Barbeiro esta dormindo...\n");
+            sem_post(&cadeiras);
             sem_wait(&cadeira_barbeiro);
         }
-        sleep(rand()%10+1);
-
-        printf("O Barbeiro corta o cabelo do cliente...\n");
-        
-        pthread_mutex_lock(&mutex);
-        busy=true;
-        pthread_mutex_unlock(&mutex);
-
-
-        printf("O Barbeiro  chama o proximo cliente...\n");
-        sem_post(&cadeiras);
-
-        pthread_mutex_lock(&mutex);
-        busy=false;
-        pthread_mutex_unlock(&mutex);
     }
     
 }
 
 void* client(void* arg){
     args_threads* args=(args_threads*)arg;
-    int qtd;
-    sem_getvalue(&cadeiras,&qtd);
-
-    if (qtd==qtd_cadeiras){
-        printf("A Barbearia está cheia...\n");
-        printf("O clinte %d foi embora...\n",args->id);
-        pthread_mutex_lock(&mutex_cut);
-        qtd_cut++;
-        pthread_mutex_unlock(&mutex_cut);
-        pthread_exit(NULL);
-    }
-
-    printf("O cliente %d chega na babearia...\n",args->id);
-
+    sem_wait(&cadeiras);
+    printf("O cliente %d chega a barbearia...\n",args->id);
     if (issleep){
-        printf("O cliente  %d acorda o barbeiro ...\n",args->id);
-        sem_post(&cadeira_barbeiro);
-
+        printf("O cliente %d acorda o barbeiro ... \n",args->id);
         pthread_mutex_lock(&mutex);
         issleep=false;
+        is_first=true;
         pthread_mutex_unlock(&mutex);
-    }
-    
-    if (!busy){
-        printf("O cliente %d senta na cadeira ... a espera do barbeiro\n",args->id);
+        sem_post(&cadeira_barbeiro);
         sem_wait(&cadeiras);
     }
-
-    printf("O cliente %d sai da barbearia ...\n",args->id);
-
-
-    pthread_mutex_lock(&mutex_cut);
-    qtd_cut++;
-    pthread_mutex_unlock(&mutex_cut);
-
-    pthread_exit(NULL);
 }
 
 int main(int argc, char const *argv[]){
@@ -108,6 +72,7 @@ int main(int argc, char const *argv[]){
     printf("Digite a quantidade de clientes: ");
     scanf("%d", &qtd_clientes);
 
+    printf("\n");
     pthread_t barbeiros;
     pthread_t clientes_thread[qtd_clientes];
     args_threads args[qtd_clientes];
