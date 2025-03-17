@@ -40,7 +40,7 @@ void* barbeiro(void* arg){
             sem_wait(&cadeira_barbeiro);
         }
         sleep(rand()%10+1);
-        
+
         printf("O Barbeiro corta o cabelo do cliente...\n");
         
         pthread_mutex_lock(&mutex);
@@ -82,8 +82,8 @@ void* client(void* arg){
         issleep=false;
         pthread_mutex_unlock(&mutex);
     }
-
-    if (busy){
+    
+    if (!busy){
         printf("O cliente %d senta na cadeira ... a espera do barbeiro\n",args->id);
         sem_wait(&cadeiras);
     }
