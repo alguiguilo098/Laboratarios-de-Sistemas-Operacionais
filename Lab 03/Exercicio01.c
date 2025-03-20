@@ -11,6 +11,7 @@
 // Data de atualização: 11.09.2023
 /*Desenvolva um programa que utilize N threads para buscar um valor específico em um vetor de inteiros. 
 O vetor deve ser dividido entre as N threads para realizar a busca de forma paralela.*/
+
 typedef struct  chunck_vetor{
     int* vetorinicial;//Endereco de inicial do vetor
     int* vetorfinal;//Endereco final do vetor 

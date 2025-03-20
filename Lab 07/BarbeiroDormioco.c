@@ -34,10 +34,9 @@ void back_to_sleep(){
     int qtd_cl;
     sem_getvalue(&cadeiras_espera,&qtd_cl);
     if (qtd_cl==0){
-        printf("O Barbeiro volta a dormir ...\n");
         pthread_mutex_lock(&mutex);
+        issleep=true;
         pthread_mutex_unlock(&mutex);
-        sem_wait(&cadeira_barbeiro);
     }
     
 }
@@ -47,9 +46,11 @@ void leave_bar(int i){
     sem_getvalue(&cadeiras_espera,&qtd_cadeiras);
     if (qtd_cadeiras==qtd_sem){
         printf("O cliente %d chega a barbearia...\nO cliente %d saiu da barbearia...\n",i);
+
         pthread_mutex_lock(&mutex_cut);
         qtd_cut++;
         pthread_mutex_unlock(&mutex_cut);
+
         pthread_exit(NULL);
     }
     
@@ -66,7 +67,7 @@ void* barbeiro(void* arg){
         sem_wait(&cadeira_barbeiro);
         
         if (!issleep){
-            printf("O Barbeiro chama o cliente para ser atendido ...\nO Barbeiro atende o cliente...\n");
+            printf("O Barbeiro chama o cliente para ser atendido...\nO Barbeiro atende o cliente...\n");
         }
 
         sem_post(&cadeiras_atendido);
@@ -79,11 +80,9 @@ void* barbeiro(void* arg){
 
 void* client(void* arg){
     args_threads* args=(args_threads*)arg;
-
     
     sem_wait(&cadeiras_espera);
     printf("O cliente %d chega a barbearia...\n",args->id);
-
 
     if (issleep){
         printf("O cliente %d acorda o barbeiro...\n",args->id);
@@ -92,7 +91,7 @@ void* client(void* arg){
         pthread_mutex_unlock(&mutex);
         
     }else{
-        printf("O cliente %d espera para ser atendido...\n",args->id);
+        printf("O cliente %d espera para ser atendido...\n",args->id);        
     }
     
     sem_post(&cadeira_barbeiro);
@@ -105,10 +104,11 @@ void* client(void* arg){
     qtd_cut++;
     pthread_mutex_unlock(&mutex_cut);
 
+    back_to_sleep();
+
     sem_post(&cadeira_barbeiro);
 
     pthread_exit(NULL);
-
 }
 
 int main(int argc, char const *argv[]){
