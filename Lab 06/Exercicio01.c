@@ -116,11 +116,6 @@ int main() {
         args[i].thread_id = i;
 
     }
-    if (qtd_threads==2)
-    {
-        args[1].end_row++;
-    }
-
     for (size_t i = 0; i < qtd_threads; i++)
     {
         pthread_create(&threads[i], NULL, sum, &args[i]); 
